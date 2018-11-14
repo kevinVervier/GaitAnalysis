@@ -1,0 +1,4 @@
+* upload the file located in /wdata/devGenes/9.19.16 Data to Kevin for Gait Model.csv in the repository 'data' folder and rename it 'metadata.csv'
+* decide the format we want to provide the Kinect data: raw or Fourier transformed or both. I think for the machine learning community it could be a nice opportunity to work with the raw data and potentially get feedback on our methodology.
+* do we want to merge the ICM data with devGenes? and keep track of it in the metadata file
+* upload the precomputed scores (/wdata/devGenes/hybrid_scores_092816.csv) in the output directory, and rename it: predicted_hybrid_scores.csv
