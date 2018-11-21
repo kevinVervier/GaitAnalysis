@@ -2,3 +2,4 @@
 * decide the format we want to provide the Kinect data: raw or Fourier transformed or both. I think for the machine learning community it could be a nice opportunity to work with the raw data and potentially get feedback on our methodology.
 * do we want to merge the ICM data with devGenes? and keep track of it in the metadata file
 * upload the precomputed scores (/wdata/devGenes/hybrid_scores_092816.csv) in the output directory, and rename it: predicted_hybrid_scores.csv
+* currently, the mainProcess function can only work on one individual at a time for simplicity sake. Users are required to loop over all their files with mainProcess function.

@@ -18,7 +18,7 @@ All devGenes participants were asked to perform two balance/gait tasks recorder 
 
 # **Data pre-processing**
 
-Given the recording process involved manual start and end, raw data were found to be too noisy to be used as such. In the following paragraphs, we describe the different transformations we applied to the data. To visualize the process, one can also refer to package in *src/pkg/demo.R*. This tool can also make predictions for NDD risk if a predictive model is provided as an input. We will use specific records to illustrate the corrections one might need to apply to a Kinect record. In the following figure, we represent the record of the different body points during a standard walking task along the 3 different directions.
+Given the recording process involved manual start and end, raw data were found to be too noisy to be used as such. In the following paragraphs, we describe the different transformations we applied to the data. To visualize the process, one can also refer to examples in *src/demo.R*. This tool can also make predictions for NDD risk if a predictive model is provided as an input. We will use specific records to illustrate the corrections one might need to apply to a Kinect record. In the following figure, we represent the record of the different body points during a standard walking task along the 3 different directions. The whole process from raw data to NDD risk prediction is handled by the *mainProcess* function found in the script *src/kinect_analysis_tool.R*.
 
 ![](../pic/step0.png)
 
@@ -27,6 +27,7 @@ Given the recording process involved manual start and end, raw data were found t
 As individuals and admninistrators might have a different reaction time to the beginning and end of the task, we look for the first and last points where there is a significant movement in all body points.
 
 ```{r, echo=T, eval=F}
+
 ########################################################
 # Function returning the index of the first moving point
 removeStart<-function(y,thresh=10^-3){
@@ -73,6 +74,7 @@ removeSteady <- function(x){
 There is also times where the beginning and end of the task include additional noise due to individuals getting ready (especially arms related).
 
 ```{r,echo=T,eval=F}
+
 ##################################################
 # Function detecting odd starts (too much movement)
 # based on median value +/- 2*sd
@@ -276,7 +278,7 @@ applyFourier <- function(x,nfreq = 10,bodysite = c(1:25)){
 }
 
 ```
-![](../step5.png)
+![](../pic/step5.png)
 
 # **References**
 

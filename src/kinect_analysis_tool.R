@@ -7,7 +7,10 @@
 # * Extract Fourier components from the recorded signal
 # see Demo at the very end of the script
 
-require(randomForest)
+if(!require(randomForest)){
+  install.packages('randomForest')
+  require(randomForest)
+}
 
 ###############################################################################################################################
 # Main function from raw data to Fourier matrix
@@ -19,15 +22,10 @@ require(randomForest)
 #         - (optional) rmOdd: boolean for performing odd start/end removal (default = TRUE)
 #         - (optional) rmGlitch: boolean for performing glitch removal (default = TRUE)
 #         - (optional) rotated: boolean for performing rotation (default = TRUE)
+#         - (optional) output.file: .csv file where scores will be output (if not, display in standard output)
 
-mainProcess <- function(file.std = file.choose(), file.ht = NULL, nfreq = 10, bodysite = 1:25, rmSteady = TRUE, rmOdd = TRUE, rmGlitch = TRUE, rotated = TRUE, verbose = TRUE){
+mainProcess <- function(file.std = NULL, file.ht = NULL, nfreq = 10, bodysite = 1:25, rmSteady = TRUE, rmOdd = TRUE, rmGlitch = TRUE, rotated = TRUE, verbose = FALSE, output.file = NULL){
 
-  #check if provided file is STD or HT
-  if(length(strsplit(file.std,'W')[[1]]) == 1){ 
-    file.ht = file.std
-    file.std = NULL
-  }
-  
   ################################
   # read standard walking data
   if(is.null(file.std)){
@@ -66,7 +64,7 @@ mainProcess <- function(file.std = file.choose(), file.ht = NULL, nfreq = 10, bo
     fourier.mat.std = applyFourier(x,nfreq,bodysite)
     cat('Standard Walk: Fourier analysis done...\n')
     # derive prediction for standard walking
-    load('../output/08.RF-std-model_and_scales_052416.Rdata')
+    load('../output/RF-std-model_and_scales.Rdata')
     s2 = matrix(fourier.mat.std[feat_imp],nrow=1)
     s2=scale(s2,attr(s,"scaled:center"),attr(s,"scaled:scale"))
     s2[which(is.na(s2))] = 0
@@ -117,7 +115,7 @@ mainProcess <- function(file.std = file.choose(), file.ht = NULL, nfreq = 10, bo
     #output
     graphics.off()
     # derive prediction for heel-toe
-    load('../output/08.RF-ht-model_and_scales_052416.Rdata')
+    load('../output/RF-ht-model_and_scales.Rdata')
     s2 = matrix(fourier.mat.ht[feat_imp],nrow=1)
     s2=scale(s2,attr(s,"scaled:center"),attr(s,"scaled:scale"))
     s2[which(is.na(s2))] = 0
@@ -129,12 +127,21 @@ mainProcess <- function(file.std = file.choose(), file.ht = NULL, nfreq = 10, bo
   }
   
   # ensemble model predicted score
-  load('../output/09.ensemble_model.Rdata')
-  fitted.results <- predict(m,newdata=data.frame('std_score'=preds.std,'ht_score' = preds.ht),type='response')
+  load('../output/hybrid_model.Rdata')
+  fitted.results <- predict(m,newdata=data.frame('w.score'=preds.std,'ht.score' = preds.ht),type='response')
   
-  cat('Standard walk score:',preds.std,'\n')
-  cat('Heel-toe walk score:',preds.ht,'\n')
-  cat('Hybrid score:',fitted.results,'\n')
+  if(is.null(output.file)){
+    cat('Standard walk score:',preds.std,'\n')
+    cat('Heel-toe walk score:',preds.ht,'\n')
+    cat('Hybrid score:',fitted.results,'\n')
+  }else{
+    #store output
+    OUTPUT = c(paste(strsplit(file.std,'_')[[1]][-length(strsplit(file.std,'_')[[1]])],collapse='_'),preds.std,preds.ht,fitted.results)
+    names(OUTPUT) = c('individual','standard_walk_score','heel_toe_score','hybrid_score')
+    write.table(OUTPUT,file=output.file,quote = FALSE,col.names = FALSE,sep=',')
+  }
+  
+
 }
 
 
@@ -449,5 +456,5 @@ applyFourier <- function(x,nfreq = 10,bodysite = c(1:25)){
 
 ###################################################################
 #                DEMO (single file)                               #
-#data = mainProcess(file.std = '~/STUDIES/Issue212-kinect/input/DB/144/144_1_W.csv',verbose = FALSE) #'~/STUDIES/Issue212-kinect/input/DB/144/144_1_W.csv'
+#data = mainProcess(file.std = '../data/144/144_1_W.csv',verbose = FALSE) 
 

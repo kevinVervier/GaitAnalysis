@@ -13,12 +13,6 @@
 # If not installed, please run the following command:
 # install.packages('randomForest')
 
-# The tool requires 'rChoiceDialogs' package to be installed.
-# If not installed, please run the following command:
-# install.packages('rChoiceDialogs')
-
-
-
 
 #load analysis package
 source('kinect_analysis_tool.R')
@@ -39,29 +33,18 @@ source('kinect_analysis_tool.R')
 # rotated: boolean for correcting camera angle variation (default: TRUE)
 # verbose: if TRUE, display how data looks at each processing step (default: FALSE)
 
-# Demo 1: Single file
-mainProcess(file.std = 'data/144/144_1_W.csv') 
+# Demo 1: Single file --> will look for the corresponding HT file
+mainProcess(file.std = '../data/144/144_1_W.csv') 
 
-# Demo 2: no file provided
-mainProcess()
+# Demo 2: display data processing --> will generate figures at each processing step
+mainProcess(file.std = '../data/144/144_1_W.csv', verbose = TRUE)
 
-# Demo 3: display data processing
-mainProcess(file.std = 'data/144/144_1_W.csv', verbose = TRUE)
+# Demo 3: provide heel-toe data --> will look for the corresponding W file
+mainProcess(file.ht = '../data/144/144_1_HT.csv')
 
-# Demo 4: provide heel-toe data
-mainProcess(file.ht = 'data/144/144_1_HT.csv')
+# Demo 4: missing heel-toe data --> predict 0.5
+mainProcess(file.std = '../data/145/145_1_W.csv')
 
-# Demo 5: missing heel-toe data
-mainProcess(file.std = 'data/145/145_1_W.csv')
+# Demo 5: output file
+mainProcess(file.std = '../data/144/144_1_W.csv',output.file='../test/predictions_144_1.csv')
 
-# Demo 6: more than one individual (select multiple files)
-mainProcess(file.std = c('data/144/144_1_W.csv','data/144/144_2_W.csv'))
-
-# Demo 7: output file
-mainProcess(output.file='test/one_individual.csv')
-
-# Demo 8: output file for multiple inputs
-mainProcess(file.std = c('data/144/144_1_W.csv','data/144/144_2_W.csv'),output.file='test/multi_individuals.csv')
-
-# Demo 8: output file for multiple chosen inputs
-mainProcess(output.file='test/multi_individuals.csv')
