@@ -342,7 +342,7 @@ for(fold in 1:nfolds){
 #compute final cross-validated perfs
 auc(roc(preds,Y)) #0.756
 #save preds
-save(preds,file='/../output/RF-std-predictions.Rdata')
+save(preds,file='../output/RF-std-predictions.Rdata')
 
 #################
 #save final model
